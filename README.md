@@ -115,7 +115,7 @@ then you want to find the difference between the correct avg and miscalculated a
     ```
 
 - django:
-```
+    ```
         from django.db.models import Value, CharField
         from django.db.models.functions import Concat, Substr
 
@@ -209,3 +209,26 @@ events.aggregate(
 )
 
 ```
+
+#### To count on field according to the condition
+
+- sql:
+
+    ```
+        SELECT 
+            COUNT(CASE WHEN gender='Female' THEN 1 END) AS female_count,
+            COUNT(CASE WHEN gender='Male' THEN 1 END) AS male_count
+        FROM 
+            CUSTOMER;
+    ```
+    
+- django:
+    ```
+        from django.db.models import F, Count, Q
+
+        Customer.objects.aggregate(
+            female_count=Count('gender', filter=Q(gender='Female')),
+            male_count=Count('gender', filter=Q(gender='Male')
+        ))
+
+    ```
